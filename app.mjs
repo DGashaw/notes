@@ -13,6 +13,7 @@ import { router as noteRouter } from "./routes/notes.mjs";
 import {router as singleNoteRouter} from "./routes/viewNote.mjs";
 import {router as deleteNoteRouter} from "./routes/deleteNote.mjs";
 import {router as deleteConfirmRouter} from "./routes/deleteConfirmNote.mjs";
+import {router as editNoteRouter} from "./routes/editNote.mjs";
 
 import { InMemoryNotesStore } from './models/notes-memory-database.mjs';
 
@@ -42,6 +43,7 @@ app.use("/notes", noteRouter);
 app.use("/notes", singleNoteRouter);
 app.use("/notes", deleteNoteRouter);
 app.use("/notes", deleteConfirmRouter);
+app.use("/notes", editNoteRouter);
 
 //custom 404
 app.use(handle404);
