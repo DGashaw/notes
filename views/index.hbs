@@ -1,2 +1,6 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<ul>
+    {{#each notesList as |note|}}
+    <!--<li>{{__note_key}}: <a href="notes/view?key={{__note_key}}">{{__note_title}}</a></li>-->
+    <li>{{note.key}}: <a href="notes/view?key={{note.key}}">{{note.title}}</a></li>
+    {{/each}}
+</ul>

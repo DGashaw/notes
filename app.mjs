@@ -1,27 +1,25 @@
-/*
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
-*/
 
 import {__dirname} from './appRootDirectory.mjs'
-//import {default as createError} from 'http-errors';
 import {default as express} from 'express';
 import {default as path} from 'path';
 import {default as cookieParser} from 'cookie-parser';
 import {default as logger} from 'morgan';
 import * as http from 'http';
 import {normalizePort, onError, onListening, handle404, basicErrorHandler} from './utility/appSupport.mjs';
-import {router as indexRouter} from './routes/index.mjs';
-
 import {default as hbs} from 'hbs';
 
-var app = express();
+import {router as indexRouter} from './routes/index.mjs';
+import { router as noteRouter } from "./routes/notes.mjs";
+import {router as singleNoteRouter} from "./routes/viewNote.mjs";
+import {router as deleteNoteRouter} from "./routes/deleteNote.mjs";
+import {router as deleteConfirmRouter} from "./routes/deleteConfirmNote.mjs";
+
+import { InMemoryNotesStore } from './models/notes-memory-database.mjs';
+
+export const notesInMemoryStore = new InMemoryNotesStore();
+
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,11 +33,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 hbs.registerPartials(path.join(__dirname, 'views/partials/'));
 
-hbs.registerHelper('getFullYear',  function(){
+hbs.registerHelper('getCurrentYear',  function(){
             return (new Date()).getFullYear();
         });
 
 app.use('/', indexRouter);
+app.use("/notes", noteRouter);
+app.use("/notes", singleNoteRouter);
+app.use("/notes", deleteNoteRouter);
+app.use("/notes", deleteConfirmRouter);
+
 //custom 404
 app.use(handle404);
 //custom 500
