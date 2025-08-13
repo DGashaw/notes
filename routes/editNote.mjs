@@ -1,8 +1,11 @@
 import {default as express} from 'express';
-import {notesInMemoryStore as notes} from '../app.mjs';
+import { NotesStore as notes } from '../models/note-store.mjs';
 
 export const router = express.Router();
 
+/**
+ * Handle notes edit POST request
+ */
 router.post("/edit", async(request, response, next) => {
     const {key, title, body} = request.body;
     try{
@@ -15,6 +18,9 @@ router.post("/edit", async(request, response, next) => {
 
 });
 
+/**
+ * Handle notes edit GET request
+ */
 router.get("/edit", async(request, response, next) => {
     try{
         const note = await notes.read(request.query.key);

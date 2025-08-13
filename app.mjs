@@ -1,9 +1,9 @@
-
 import {__dirname} from './appRootDirectory.mjs'
 import {default as express} from 'express';
 import {default as path} from 'path';
 import {default as cookieParser} from 'cookie-parser';
 import {default as logger} from 'morgan';
+import * as rfs from 'rotating-file-stream';
 import * as http from 'http';
 import {normalizePort, onError, onListening, handle404, basicErrorHandler} from './utility/appSupport.mjs';
 import {default as hbs} from 'hbs';
@@ -15,10 +15,23 @@ import {router as deleteNoteRouter} from "./routes/deleteNote.mjs";
 import {router as deleteConfirmRouter} from "./routes/deleteConfirmNote.mjs";
 import {router as editNoteRouter} from "./routes/editNote.mjs";
 
-import { InMemoryNotesStore } from './models/notes-memory-database.mjs';
+import {useModel} from "./models/note-store.mjs";
+import {default as dotenv} from 'dotenv'
 
-export const notesInMemoryStore = new InMemoryNotesStore();
+import {default as DEBUG} from 'debug';
 
+dotenv.config();
+
+const debug = DEBUG('notes:debug');
+const debugError = DEBUG("notes:error");
+
+/**
+ * Dynamically select the data store for the notes app based on
+ * passed enviromental value. The default will be memory-store 
+ */
+useModel(process.env.NOTES_MODEL ? process.env.NOTES_MODEL : "memory")
+    .then(() => {})
+    .catch(error => {onError({code: 'ENOTESSTORE', error})});
 
 const app = express();
 
@@ -26,7 +39,21 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.use(logger('dev'));
+/**
+ * Use of morgan with rotating file stream to 
+ * write the logs on a file if the request_log_format is
+ * provided. Otherwise, the logs are printed on the screen
+ */
+app.use(logger(process.env.REQUEST_LOG_FORMAT || 'dev', 
+    {stream: process.env.REQUEST_LOG_FILE ? 
+        rfs.createStream(path.join(__dirname, process.env.REQUEST_LOG_FILE),{
+            size: '10M',
+            interval: '1d',
+            compress: 'gzip'
+        } 
+        ) : process.stdout
+    }
+));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -51,9 +78,18 @@ app.use(handle404);
 app.use(basicErrorHandler);
 
 export const port = normalizePort(process.env.PORT || '3000');
+export const hostname = process.env.HOSTNAME || 'localhost';
+export const enviroment = process.env.NODE_ENV || 'uknown';
+
 app.set('port', port);
+app.set('hostname', hostname);
+app.set('enviroment', enviroment);
 
 export const server = http.createServer(app);
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+server.on('request', (request, response) => {
+    debug(`${new Date().toISOString()} request ${request.method}: ${request.url}`);
+})

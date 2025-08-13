@@ -1,7 +1,11 @@
 import {default as express} from 'express';
-const router = express.Router();
-import { notesInMemoryStore as notes } from '../app.mjs';
+import { NotesStore as notes } from '../models/note-store.mjs';
 
+const router = express.Router();
+
+/**
+ * Handle the GET request to display the details of a note
+ */
 router.get('/view', async(request, response, next) => {
     const key = request.query.key;
     try{

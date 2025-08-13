@@ -2,7 +2,7 @@ import {Note, AbstractNotesStore} from './notes.mjs';
 
 const notes = [];
 
-export class InMemoryNotesStore extends AbstractNotesStore
+export default class InMemoryNotesStore extends AbstractNotesStore
 {
     //This is irrelevant for in-memory array storage
     async close() {}

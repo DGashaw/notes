@@ -1,13 +1,19 @@
 import {default as express} from 'express';
-import { notesInMemoryStore as notes } from "../app.mjs";
+import { NotesStore as notes } from '../models/note-store.mjs';
 
 const router = express.Router();
 
-/* GET users listing. */
+/**
+ * Handle the GET request for adding new note
+ */
 router.get("/add", async(request, response, next) => {
   response.status = 200;
   response.render("addNoteForm")
 });
+
+/**
+ * Handle the POST request for adding new note
+ */
 router.post("/add", async(request, response, next) => {
   const {key, title, body} = request.body;
   try{
