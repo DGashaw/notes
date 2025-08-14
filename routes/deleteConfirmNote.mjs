@@ -1,8 +1,11 @@
 import {default as express} from 'express';
-import { NotesStore as notes } from '../models/note-store.mjs';
+import { NotesStore as notes } from '../models/notes-store-class/note-store.mjs';
 
 export const router = express.Router();
 
+/**
+ * Handles POST request for deleting confirmed note
+ */
 router.post("/remove/confirm", async(request, response, next) => {
     const notekey = request.body.notekey;
     try{

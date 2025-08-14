@@ -1,5 +1,8 @@
 import  { default as express } from 'express';
-import { NotesStore as notes } from '../models/note-store.mjs';
+import { NotesStore as notes } from '../models/notes-store-class/note-store.mjs';
+import {default as DEBUG} from 'debug';
+const debug = DEBUG('notes: notes-index.mjs');
+const debugError = DEBUG('notes: error-index.mjs');
 const router = express.Router();
 
 /* GET home page. */
@@ -11,7 +14,6 @@ router.get('/', async(request, response, next) => {
     });
 
     const notesList = await Promise.all(keyPromises);
-    //console.log(`notesList:\n${JSON.stringify(notesList, undefined, 2)}`);
     response.render("index", {"title" : "Notes-App", "notesList": notesList});
 
   }

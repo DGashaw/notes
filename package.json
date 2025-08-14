@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "sqlite3-setup": "sqlite3 ./models/db/database.sqlite3 --init models/schema/schema-sqlite3.sql",
     "start": "cross-env node ./app.mjs",
-    "development": "cross-env NODE_ENV=development DEBUG=notes:* nodemon ./app.mjs"
+    "development": "cross-env NODE_ENV=development DEBUG=notes:* nodemon ./app.mjs",
+    "sqlite3-start": "NOTES_MODEL=sqlite3 cross-env NODE_ENV=development DEBUG=notes:* nodemon ./app.js",
+    "mongodb-start": "NOTES_MODEL=mongodb cross-env NODE_ENV=development DEBUG=notes:* nodemon ./app.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -14,8 +17,10 @@
     "express": "^4.21.2",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
+    "mongodb": "^6.18.0",
     "morgan": "^1.10.1",
-    "rotating-file-stream": "^3.2.6"
+    "rotating-file-stream": "^3.2.6",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

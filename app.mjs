@@ -15,15 +15,15 @@ import {router as deleteNoteRouter} from "./routes/deleteNote.mjs";
 import {router as deleteConfirmRouter} from "./routes/deleteConfirmNote.mjs";
 import {router as editNoteRouter} from "./routes/editNote.mjs";
 
-import {useModel} from "./models/note-store.mjs";
+import {useModel} from "./models/notes-store-class/note-store.mjs";
 import {default as dotenv} from 'dotenv'
 
 import {default as DEBUG} from 'debug';
 
 dotenv.config();
 
-const debug = DEBUG('notes:debug');
-const debugError = DEBUG("notes:error");
+const debug = DEBUG('notes:app.js');
+const debugError = DEBUG("notes:error-app.js");
 
 /**
  * Dynamically select the data store for the notes app based on

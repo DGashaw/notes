@@ -1,7 +1,7 @@
 import {port, hostname, enviroment} from '../app.mjs';
 import {server} from '../app.mjs';
 import {default as DEBUG} from 'debug';
-import * as util from 'util';
+import util from 'util';
 
 const debug = DEBUG('app-support:debug');
 const debugError = DEBUG('app-support:error');

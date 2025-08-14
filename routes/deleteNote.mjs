@@ -1,8 +1,11 @@
 import {default as express} from 'express';
-import { NotesStore as notes } from '../models/note-store.mjs';
+import { NotesStore as notes } from '../models/notes-store-class/note-store.mjs';
 
 export const router = express.Router();
 
+/**
+ * Handles GET request for deleting selected note
+ */
 router.get("/remove", async(request, response, next) => {
     const notekey = request.query.key;
     try{
