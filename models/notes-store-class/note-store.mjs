@@ -4,7 +4,7 @@
  */
 
 import {default as DEBUG} from 'debug';
-import { dynamicImport } from '../../utility/dynamicImport.mjs';
+//import { dynamicImport } from '../../utility/dynamicImport.mjs';
 
 const debug = DEBUG("notes:note-store");
 const debugError = DEBUG("notes:error-store")
@@ -17,14 +17,12 @@ let _NotesStore = null;
  */
 export async function useModel(model){
     try{
-        
         const NotesStoreModule = await import(`../db/notes-${model}-database.mjs`);
         const NoteStoreClass = NotesStoreModule.default;
         _NotesStore = new NoteStoreClass();
         return _NotesStore;
     }
     catch(error){
-        debugError(error);
         throw new Error(`No recognized NoteStore in ${model}.\nError: ${error}`);
     }
 }
